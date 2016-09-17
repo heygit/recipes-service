@@ -1,4 +1,4 @@
-package project.service;
+package project.service.applied;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import project.model.Formula;

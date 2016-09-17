@@ -1,5 +1,7 @@
-package project.service;
+package project.service.applied;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import project.model.Formula;
 import project.model.Product;
 
@@ -10,6 +12,8 @@ import java.util.List;
  */
 public class FormulaService {
 
+    private static Logger log = LoggerFactory.getLogger(FormulaService.class.getName());
+
     private static final String FILE_NAME_EN = "enformulas.json";
     private static final String FILE_NAME_RU = "ruformulas.json";
 
@@ -17,8 +21,13 @@ public class FormulaService {
     private static FormulaTree ruFormulas;
 
     public static void init() {
+        log.info("English recipes initialization started");
         enFormulas = new FormulaTree(FILE_NAME_EN);
+        log.info("English recipes initialization finished");
+
+//        log.info("Russian recipes initialization started");
 //        ruFormulas = new FormulaTree(FILE_NAME_RU);
+//        log.info("Russian recipes initialization finished");
     }
 
     public static List<Formula> getEnFormulas(List<Integer> products) {
