@@ -1,4 +1,4 @@
-package project.service.utils.scheduling.monitoring;
+package project.service.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

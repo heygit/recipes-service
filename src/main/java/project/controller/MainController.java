@@ -2,7 +2,6 @@ package project.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import project.model.Formula;
 import project.service.applied.FormulaService;
-import project.service.utils.scheduling.monitoring.MemoryUsageService;
+import project.service.utils.MemoryUsageService;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -18,7 +17,6 @@ import java.util.List;
 
 
 @Controller
-@Scope("prototype")
 @RequestMapping("")
 public class MainController {
 
