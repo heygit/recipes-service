@@ -30,6 +30,14 @@ public class FormulaService {
 //        log.info("Russian recipes initialization finished");
     }
 
+    public static List<Formula> searchEnFormulas(String name) {
+        return enFormulas.search(name);
+    }
+
+    public static List<Formula> searchRuFormulas(String name) {
+        return ruFormulas.search(name);
+    }
+
     public static List<Formula> getEnFormulas(List<Integer> products) {
         return enFormulas.getFormulas(products);
     }

@@ -39,6 +39,15 @@ public class MainController {
         return result;
     }
 
+    @RequestMapping(value = "name", method = RequestMethod.GET)
+    @ResponseBody
+    public Object name(@RequestParam(value = "search", required = false) String search) {
+        log.info("Search " + search + " started");
+        List<Formula> result = FormulaService.searchEnFormulas(search);
+        log.info("Search " + search + " finished");
+        return result;
+    }
+
     @RequestMapping(value = "heap", method = RequestMethod.GET)
     @ResponseBody
     public Object heap() {

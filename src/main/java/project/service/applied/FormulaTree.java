@@ -1,6 +1,7 @@
 package project.service.applied;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang.StringUtils;
 import project.model.Formula;
 import project.model.Ingredient;
 import project.model.Product;
@@ -17,9 +18,10 @@ public class FormulaTree {
 
     private static ObjectMapper mapper = new ObjectMapper();
 
-    private List<Formula> formulas = null;
-    private List<Product> products = new ArrayList<>();
+    private List<Formula> formulas;
+    private List<Product> products;
     private Map<Integer, Object> tree = new HashMap<>();
+    private List<String> titles;
 
     public FormulaTree(String fileName) {
         // Get info from json
@@ -30,6 +32,10 @@ public class FormulaTree {
             e.printStackTrace();
             return;
         }
+
+        // Fill in titles
+        titles = new ArrayList<>(formulas.size());
+        formulas.forEach(elem -> titles.add(elem.getTitle()));
 
         // Sort products by frequency
         Map<String, Integer> productFrequency = new HashMap<>();
@@ -46,6 +52,7 @@ public class FormulaTree {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
         Map<String, Integer> productId = new HashMap<>();
+        products = new ArrayList<>(formulas.size());
         for (int i = 0; i < productSorted.size(); i++) {
             products.add(new Product(i, productSorted.get(i)));
             productId.put(productSorted.get(i), i);
@@ -65,6 +72,19 @@ public class FormulaTree {
                 ((List)currentNode.get(null)).add(i);
             }
         }
+    }
+
+    public List<Formula> search(String name) {
+        List<Formula> result = new ArrayList<>();
+        for (int i = 0; i < titles.size(); i++) {
+            for (String elem: titles.get(i).split(" ")) {
+                if (StringUtils.getLevenshteinDistance(name, elem) > 2)
+                    continue;
+                result.add(formulas.get(i));
+                break;
+            }
+        }
+        return result;
     }
 
     public List<Formula> getFormulas(List<Integer> products) {
