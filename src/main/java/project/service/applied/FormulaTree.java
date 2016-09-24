@@ -18,13 +18,11 @@ public class FormulaTree {
 
     private static ObjectMapper mapper = new ObjectMapper();
 
-    // TODO: REPLACE ID WITH OBJECTS
-
     private List<Formula> formulas;
     private List<Product> products;
     private Map<Integer, Object> tree = new HashMap<>();
     private Map<String, List<Formula>> categories = new HashMap<>();
-    private List<String> titles;
+    private List<String[]> titles;
     private List<String> prepositions;
 
     public FormulaTree(String fileName, List<String> prepositions) {
@@ -41,7 +39,7 @@ public class FormulaTree {
 
         // Fill in titles
         titles = new ArrayList<>(formulas.size());
-        formulas.forEach(elem -> titles.add(elem.getTitle().toLowerCase()));
+        formulas.forEach(elem -> titles.add(elem.getTitle().toLowerCase().replaceAll("[()]", "").split(" ")));
 
         // Fill in categories
         formulas.forEach(elem -> {
@@ -77,20 +75,20 @@ public class FormulaTree {
             productId.put(productSorted.get(i), i);
         }
 
-        for (int i = 0; i < formulas.size(); i++) {
+        formulas.forEach(formula -> {
             Map<Integer, Object> currentNode = tree;
-            for (Integer elem: getProductIdList(formulas.get(i), productId)) {
+            for (Integer elem: getProductIdList(formula, productId)) {
                 if (currentNode.get(elem) == null) {
                     currentNode.put(elem, new HashMap<Integer, Object>());
                 }
                 currentNode = (Map<Integer, Object>) currentNode.get(elem);
             }
             if (currentNode.get(null) == null) {
-                currentNode.put(null, new ArrayList<>(Arrays.asList(i)));
+                currentNode.put(null, new ArrayList<>(Arrays.asList(formula)));
             } else {
-                ((List)currentNode.get(null)).add(i);
+                ((List)currentNode.get(null)).add(formula);
             }
-        }
+        });
     }
 
     /**
@@ -105,7 +103,7 @@ public class FormulaTree {
             boolean found = false;
             for (String search: searchValues) {
                 found = false;
-                for (String elem: titles.get(i).split(" ")) {
+                for (String elem: titles.get(i)) {
                     if (StringUtils.getLevenshteinDistance(search, elem) > 2)
                         continue;
                     found = true;
@@ -153,14 +151,13 @@ public class FormulaTree {
     }
 
     private void getFormulas(List<Integer> products, Map<Integer, Object> node, List<Formula> result) {
-        List<Integer> data = (List<Integer>) node.get(null);
-        if (data != null) {
-            for (Integer index: data) {
-                result.add(formulas.get(index));
-            }
-        }
+        List<Formula> data = (List<Formula>) node.get(null);
+        if (data != null)
+            result.addAll(data);
+
         if (products == null)
             return;
+
         for (int i = 0; i < products.size(); i++) {
             Map<Integer, Object> elem = (Map<Integer, Object>) node.get(products.get(i));
             if (elem == null)

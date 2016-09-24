@@ -76,14 +76,14 @@ public class MainController {
     @RequestMapping(value = "get/ru", method = RequestMethod.GET)
     @ResponseBody
     public Object getRu(@RequestParam(value = "category") String category,
-                        @RequestParam(value = "page", required = false) int page) {
+                        @RequestParam(value = "page", required = false, defaultValue ="1") int page) {
         return FormulaService.getRuFormulasPaged(category, page);
     }
 
     @RequestMapping(value = "get/en", method = RequestMethod.GET)
     @ResponseBody
     public Object getEn(@RequestParam(value = "category") String category,
-                        @RequestParam(value = "page", required = false) int page) {
+                        @RequestParam(value = "page", required = false, defaultValue ="1") int page) {
         return FormulaService.getEnFormulasPaged(category, page);
     }
 
