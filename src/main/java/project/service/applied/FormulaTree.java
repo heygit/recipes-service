@@ -18,12 +18,18 @@ public class FormulaTree {
 
     private static ObjectMapper mapper = new ObjectMapper();
 
+    // TODO: REPLACE ID WITH OBJECTS
+
     private List<Formula> formulas;
     private List<Product> products;
     private Map<Integer, Object> tree = new HashMap<>();
+    private Map<String, List<Formula>> categories = new HashMap<>();
     private List<String> titles;
+    private List<String> prepositions;
 
-    public FormulaTree(String fileName) {
+    public FormulaTree(String fileName, List<String> prepositions) {
+        this.prepositions = prepositions;
+
         // Get info from json
         try {
             formulas = mapper.readValue(new File(fileName),
@@ -35,7 +41,20 @@ public class FormulaTree {
 
         // Fill in titles
         titles = new ArrayList<>(formulas.size());
-        formulas.forEach(elem -> titles.add(elem.getTitle()));
+        formulas.forEach(elem -> titles.add(elem.getTitle().toLowerCase()));
+
+        // Fill in categories
+        formulas.forEach(elem -> {
+            String category = elem.getCategory();
+            List<Formula> recipes = categories.get(category);
+            if (recipes == null) {
+                List<Formula> list = new ArrayList<>();
+                list.add(elem);
+                categories.put(category, list);
+            } else {
+                recipes.add(elem);
+            }
+        });
 
         // Sort products by frequency
         Map<String, Integer> productFrequency = new HashMap<>();
@@ -74,26 +93,66 @@ public class FormulaTree {
         }
     }
 
+    /**
+     * Search by part of title
+     * @param name search values comma separated
+     * @return
+     */
     public List<Formula> search(String name) {
         List<Formula> result = new ArrayList<>();
+        List<String> searchValues = getSearchValues(name);
         for (int i = 0; i < titles.size(); i++) {
-            for (String elem: titles.get(i).split(" ")) {
-                if (StringUtils.getLevenshteinDistance(name, elem) > 2)
-                    continue;
-                result.add(formulas.get(i));
-                break;
+            boolean found = false;
+            for (String search: searchValues) {
+                found = false;
+                for (String elem: titles.get(i).split(" ")) {
+                    if (StringUtils.getLevenshteinDistance(search, elem) > 2)
+                        continue;
+                    found = true;
+                    break;
+                }
+                if (!found)
+                    break;
             }
+            if (found)
+                result.add(formulas.get(i));
         }
         return result;
     }
 
-    public List<Formula> getFormulas(List<Integer> products) {
+    /**
+     * Make search value from request param
+     * @param name
+     * @return
+     */
+    private List<String> getSearchValues(String name) {
+        List<String> result = new ArrayList<>();
+        for (String elem: name.split(",|-")) {
+            if (prepositions.contains(elem))
+                continue;
+            result.add(elem.toLowerCase());
+        }
+        return result;
+    }
+
+
+    /**
+     * Get formulas by products
+     * @param prods - products separated by comma
+     * @return
+     */
+    public List<Formula> getFormulas(String prods) {
+        String[] array = prods.split(",");
+        List<Integer> products = new LinkedList<>();
+        for (String elem: array)
+            products.add(Integer.valueOf(elem));
+        Collections.sort(products);
         List<Formula> result = new ArrayList<>();
         getFormulas(products, tree, result);
         return result;
     }
 
-    public void getFormulas(List<Integer> products, Map<Integer, Object> node, List<Formula> result) {
+    private void getFormulas(List<Integer> products, Map<Integer, Object> node, List<Formula> result) {
         List<Integer> data = (List<Integer>) node.get(null);
         if (data != null) {
             for (Integer index: data) {
@@ -113,6 +172,27 @@ public class FormulaTree {
         }
     }
 
+    /**
+     * Gte formulas by category paged
+     * @param category
+     * @param pageSize
+     * @param pageNumber
+     * @return
+     */
+    public List<Formula> getFormulasPaged(String category, int pageSize, int pageNumber) {
+        List<Formula> data = categories.get(category);
+        int offset = (pageSize - 1) * pageNumber;
+        if (offset >= data.size())
+            return null;
+        int limit = Math.min(offset + pageSize, data.size());
+        return data.subList(offset, limit);
+    }
+
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
     private List<Integer> getProductIdList(Formula formula, Map<String, Integer> productId) {
         List<Integer> result = new ArrayList<>();
         for (Ingredient elem: formula.getIngredients()) {
@@ -122,7 +202,4 @@ public class FormulaTree {
         return result;
     }
 
-    public List<Product> getProducts() {
-        return products;
-    }
 }
