@@ -25,13 +25,6 @@ public class MainController {
     @Value("${adminKey}")
     private String adminKey;
 
-    @Value("${ruPrefix}")
-    private String ruPrefix;
-
-    @Value("${enPrefix}")
-    private String enPrefix;
-
-
     @RequestMapping(value = "retrieve/ru", method = RequestMethod.GET)
     @ResponseBody
     public Object retrieveRu(@RequestParam(value = "products") String products) {
