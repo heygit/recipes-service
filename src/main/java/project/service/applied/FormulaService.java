@@ -18,8 +18,10 @@ public class FormulaService {
     private static final String FILE_NAME_EN = "enformulas.json";
     private static final String FILE_NAME_RU = "ruformulas.json";
 
-    private static final List<String> PREPOSITIONS_RU = Arrays.asList("c, без, в, к, у, на, о, об, под");
-    private static final List<String> PREPOSITIONS_EN = Arrays.asList("in, of, out, a, an, the, on");
+    private static final List<String> PREPOSITIONS_RU = Arrays.asList("c", "без", "в", "к", "у",
+            "на", "о", "об", "под");
+    private static final List<String> PREPOSITIONS_EN = Arrays.asList("in", "of", "out", "a",
+            "an", "the", "on");
 
     private static final int PAGE_SIZE = 30;
 

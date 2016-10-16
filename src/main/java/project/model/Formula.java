@@ -1,5 +1,6 @@
 package project.model;
 
+
 import java.util.List;
 
 /**
@@ -13,19 +14,23 @@ public class Formula {
     private int portions;
     private String category;
     private int rating;
+    private String url;
+    private String img;
     private List<Ingredient> ingredients;
     private List<String> steps;
 
-    public Formula(String time, int calories, int portions, String category, int rating,
-                   List<Ingredient> ingredients, List<String> steps, String title) {
+    public Formula(String time, String title, int calories, int portions, String category, int rating,
+                   String url, String img, List<Ingredient> ingredients, List<String> steps) {
         this.time = time;
+        this.title = title;
         this.calories = calories;
         this.portions = portions;
         this.category = category;
         this.rating = rating;
+        this.url = url;
+        this.img = img;
         this.ingredients = ingredients;
         this.steps = steps;
-        this.title = title;
     }
 
     public Formula() {
@@ -37,6 +42,14 @@ public class Formula {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getCalories() {
@@ -71,6 +84,22 @@ public class Formula {
         this.rating = rating;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
     public List<Ingredient> getIngredients() {
         return ingredients;
     }
@@ -87,14 +116,6 @@ public class Formula {
         this.steps = steps;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     @Override
     public String toString() {
         return "Formula{" +
@@ -104,6 +125,8 @@ public class Formula {
                 ", portions=" + portions +
                 ", category='" + category + '\'' +
                 ", rating=" + rating +
+                ", url='" + url + '\'' +
+                ", img='" + img + '\'' +
                 ", ingredients=" + ingredients +
                 ", steps=" + steps +
                 '}';

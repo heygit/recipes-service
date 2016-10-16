@@ -28,37 +28,25 @@ public class MainController {
     @RequestMapping(value = "retrieve/ru", method = RequestMethod.GET)
     @ResponseBody
     public Object retrieveRu(@RequestParam(value = "products") String products) {
-        log.info("Started retrieving russian recipes for " + products);
-        List<Formula> result = FormulaService.getRuFormulas(products);
-        log.info("Finished retrieving russian recipes for " + products);
-        return result;
+        return FormulaService.getRuFormulas(products);
     }
 
     @RequestMapping(value = "retrieve/en", method = RequestMethod.GET)
     @ResponseBody
     public Object retrieveEn(@RequestParam(value = "products") String products) {
-        log.info("Started retrieving english recipes for " + products);
-        List<Formula> result = FormulaService.getEnFormulas(products);
-        log.info("Finished retrieving english recipes for " + products);
-        return result;
+        return FormulaService.getEnFormulas(products);
     }
 
     @RequestMapping(value = "search/ru", method = RequestMethod.GET)
     @ResponseBody
     public Object searchRu(@RequestParam(value = "title") String title) {
-        log.info("Russian search " + title + " started");
-        List<Formula> result = FormulaService.searchRuFormulas(title);
-        log.info("Russian search " + title + " finished");
-        return result;
+        return FormulaService.searchRuFormulas(title);
     }
 
     @RequestMapping(value = "search/en", method = RequestMethod.GET)
     @ResponseBody
     public Object searchEn(@RequestParam(value = "title") String title) {
-        log.info("English search " + title + " started");
-        List<Formula> result = FormulaService.searchEnFormulas(title);
-        log.info("English search " + title + " finished");
-        return result;
+        return FormulaService.searchEnFormulas(title);
     }
 
     @RequestMapping(value = "prods/ru", method = RequestMethod.GET)
