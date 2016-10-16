@@ -104,7 +104,7 @@ public class FormulaTree {
             for (String search: searchValues) {
                 found = false;
                 for (String elem: titles.get(i)) {
-                    if (StringUtils.getLevenshteinDistance(search, elem) > 2)
+                    if (StringUtils.getLevenshteinDistance(search, elem) > 1)
                         continue;
                     found = true;
                     break;
